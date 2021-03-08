@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:projetoestrutura/telas/home.dart';
+import 'package:projetoestrutura/routeGenerator.dart';
+import 'package:projetoestrutura/telas/anunciosOlx.dart';
+import 'package:projetoestrutura/telas/login.dart';
 
 
 final ThemeData padrao = ThemeData(
@@ -13,8 +15,10 @@ void main() async {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: Home(),
+    home: Anuncios(),
     theme: padrao ,
+    initialRoute: "/",
+    onGenerateRoute: RouteGenerator.generateRoute,
   ));
 }
 

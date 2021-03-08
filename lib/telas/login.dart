@@ -4,12 +4,12 @@ import 'package:projetoestrutura/models/textFieldCostumizado.dart';
 import 'package:projetoestrutura/models/usuario.dart';
 
 
-class Home extends StatefulWidget {
+class Login extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _LoginState createState() => _LoginState();
 }
 
-class _HomeState extends State<Home> {
+class _LoginState extends State<Login> {
 
   TextEditingController _controlladorSenha  = TextEditingController();
   TextEditingController _controlladorEmail = TextEditingController();
@@ -25,6 +25,8 @@ class _HomeState extends State<Home> {
         email: usuario.email,
         password: usuario.senha).then((firebaseUser) {
 
+          Navigator.pushReplacementNamed(context, "/");
+
     });
   }
 
@@ -33,7 +35,7 @@ class _HomeState extends State<Home> {
     auth.signInWithEmailAndPassword(
         email: usuario.email,
         password: usuario.senha).then((firebaseUser) {
-
+           Navigator.pushReplacementNamed(context, "/");
     });
   }
   validadorCampos(){
@@ -49,7 +51,7 @@ class _HomeState extends State<Home> {
         usuario.senha  = senha;
 
 
-        if(cadastrar  = true){
+        if(cadastrar  == true){
 
           cadastrarUser(usuario);
           //cadastrar o usuário

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:projetoestrutura/models/raisedCustomizado.dart';
 import 'dart:io';
 
@@ -11,10 +12,27 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
   List<File> _listaImagens = List();
   final _formKey = GlobalKey<FormState>();
 
+  //final picker = ImagePicker();
+  File imagemSelecionada;
 
-  _selecionaGaleria(){
+   _selecionaGaleria()async{
+
+  final pickedFile = await  ImagePicker().getImage(source: ImageSource.gallery);
+
+  if (pickedFile == null) return;
+
+  imagemSelecionada = File(pickedFile.path);
+
+
+  if(imagemSelecionada != null){
+
+    setState(() {
+      _listaImagens.add(imagemSelecionada);
+    });
 
   }
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,15 +78,20 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                                             backgroundColor: Colors.grey[400],
                                             radius: 50,
                                             child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
-                                                
-                                                Icon(Icons.add_a_photo, size: 40
-                                                , color: Colors.grey[100],),
-
-                                                Text('Adicionar',style: TextStyle(
+                                                Icon(
+                                                  Icons.add_a_photo,
+                                                  size: 40,
                                                   color: Colors.grey[100],
-                                                ),)
+                                                ),
+                                                Text(
+                                                  'Adicionar',
+                                                  style: TextStyle(
+                                                    color: Colors.grey[100],
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           ),
@@ -76,7 +99,52 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                                       );
                                     }
 
-                                    if (_listaImagens.length > 0) {}
+                                    if (_listaImagens.length > 0) {
+                                      return Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 8),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            showDialog(
+                                              
+                                              context: context,
+                                              builder: (context)=> Dialog(
+                                                child: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Image.file(_listaImagens[index]),
+                                                    FlatButton(
+                                                      child: Text("Excluir"),
+                                                      textColor: Colors.red,
+                                                      onPressed: (){
+                                                        setState(() {
+                                                          _listaImagens.removeAt(index);
+                                                          Navigator.of(context).pop();
+                                                        });
+                                                      },
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                              );
+                                          },
+                                          child: CircleAvatar(
+                                            radius: 50,
+                                            backgroundImage:
+                                                FileImage(_listaImagens[index]),
+                                            child: Container(
+                                              color: Color.fromRGBO(
+                                                  255, 255, 255, 0.4),
+                                              alignment: Alignment.center,
+                                              child: Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
 
                                     return Container();
                                   }),

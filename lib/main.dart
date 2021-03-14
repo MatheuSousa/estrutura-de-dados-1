@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:projetoestrutura/routeGenerator.dart';
 import 'package:projetoestrutura/telas/anunciosOlx.dart';
-import 'package:projetoestrutura/telas/login.dart';
 
 
 final ThemeData padrao = ThemeData(

@@ -1,7 +1,10 @@
+import 'package:brasil_fields/modelos/estados.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projetoestrutura/models/raisedCustomizado.dart';
 import 'dart:io';
+
+import 'package:validadores/Validador.dart';
 
 class NovoAnuncio extends StatefulWidget {
   @override
@@ -10,28 +13,67 @@ class NovoAnuncio extends StatefulWidget {
 
 class _NovoAnuncioState extends State<NovoAnuncio> {
   List<File> _listaImagens = List();
+  List<DropdownMenuItem<String>> _listaItensEstados = List();
+  List<DropdownMenuItem<String>> _listaItensCategorias = List();
+
   final _formKey = GlobalKey<FormState>();
+
+  String _itemSelecionadoEstado ;
+  String _itemSelecionadoCategoria;
 
   //final picker = ImagePicker();
   File imagemSelecionada;
 
-   _selecionaGaleria()async{
+  _selecionaGaleria() async {
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
 
-  final pickedFile = await  ImagePicker().getImage(source: ImageSource.gallery);
+    if (pickedFile == null) return;
 
-  if (pickedFile == null) return;
+    imagemSelecionada = File(pickedFile.path);
 
-  imagemSelecionada = File(pickedFile.path);
-
-
-  if(imagemSelecionada != null){
-
-    setState(() {
-      _listaImagens.add(imagemSelecionada);
-    });
-
+    if (imagemSelecionada != null) {
+      setState(() {
+        _listaImagens.add(imagemSelecionada);
+      });
+    }
   }
-}
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _carregarItensDrop();
+  }
+
+  _carregarItensDrop() {
+
+     _listaItensCategorias.add(
+      DropdownMenuItem(
+        child: Text("Automóvel"), value : "auto"));
+
+      _listaItensCategorias.add(
+        DropdownMenuItem(
+          child: Text("Imóvel"), value : "imovel"));
+    _listaItensCategorias.add(
+        DropdownMenuItem(
+          child: Text("Carros"), value : "carros"));
+    _listaItensCategorias.add(
+        DropdownMenuItem(
+          child: Text("Jardinagem"), value : "jardinagem"));
+
+      _listaItensCategorias.add(
+      DropdownMenuItem(
+        child: Text("Ferramentas"), value : "ferramentas"));
+
+    //ESTADOS
+    for (var estado in Estados.listaEstadosAbrv) {
+      _listaItensEstados.add(DropdownMenuItem(
+        child: Text(estado),
+        value: estado,
+      ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,27 +148,34 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                                         child: GestureDetector(
                                           onTap: () {
                                             showDialog(
-                                              
-                                              context: context,
-                                              builder: (context)=> Dialog(
-                                                child: Column(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    Image.file(_listaImagens[index]),
-                                                    FlatButton(
-                                                      child: Text("Excluir"),
-                                                      textColor: Colors.red,
-                                                      onPressed: (){
-                                                        setState(() {
-                                                          _listaImagens.removeAt(index);
-                                                          Navigator.of(context).pop();
-                                                        });
-                                                      },
-                                                    )
-                                                  ],
-                                                ),
-                                              )
-                                              );
+                                                context: context,
+                                                builder: (context) => Dialog(
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Image.file(
+                                                              _listaImagens[
+                                                                  index]),
+                                                          FlatButton(
+                                                            child:
+                                                                Text("Excluir"),
+                                                            textColor:
+                                                                Colors.red,
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                _listaImagens
+                                                                    .removeAt(
+                                                                        index);
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              });
+                                                            },
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ));
                                           },
                                           child: CircleAvatar(
                                             radius: 50,
@@ -162,7 +211,52 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                       },
                     ),
                     Row(
-                      children: [Text("Estado"), Text("Categoria")],
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: DropdownButtonFormField(
+                                value: _itemSelecionadoEstado,
+                                hint: Text("Estados"),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                ),
+                                items: _listaItensEstados,
+                                validator: (valor) {
+                                  return Validador()
+                                      .add(Validar.OBRIGATORIO,
+                                          msg: "Campo Obrigatório!")
+                                      .valido(valor);
+                                },
+                                onChanged: (valor) {
+                                  _itemSelecionadoEstado = valor;
+                                }),
+                          ),
+                        ),
+                          Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: DropdownButtonFormField(
+                                value: _itemSelecionadoCategoria,
+                                hint: Text("Categoria"),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                ),
+                                items: _listaItensCategorias,
+                                validator: (valor) {
+                                  return Validador()
+                                      .add(Validar.OBRIGATORIO,
+                                          msg: "Campo Obrigatório!")
+                                      .valido(valor);
+                                },
+                                onChanged: (valor) {
+                                  _itemSelecionadoCategoria = valor;
+                                }),
+                          ),
+                        ),
+                      ],
                     ),
                     Text("Caixas de texto"),
                     RaisedCustomizado(

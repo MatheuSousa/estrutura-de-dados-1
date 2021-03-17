@@ -30,13 +30,60 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
   //final picker = ImagePicker();
   File imagemSelecionada;
 
-  _selecionaGaleria() async {
-    final pickedFile =
+  
+Future<void> _mostrarEscolhaDialogo(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  GestureDetector(
+                      child: Text("Galeria"),
+                      onTap: () {
+                        _recuperarImagem(false);
+                      }),
+
+                  SizedBox(height: 16),
+
+                   GestureDetector(
+                      child: Text("Câmera"),
+                      onTap: () {
+                        _recuperarImagem(true);
+                      }),    
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+
+  _recuperarImagem(bool daCamera) async {
+
+
+    if(daCamera == false){
+      final pickedFile =
         await ImagePicker().getImage(source: ImageSource.gallery);
+         if (pickedFile == null) return;
 
-    if (pickedFile == null) return;
+      imagemSelecionada = File(pickedFile.path);
+    }
 
-    imagemSelecionada = File(pickedFile.path);
+
+   
+     if(daCamera){
+      final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.camera);
+         if (pickedFile == null) return;
+
+      imagemSelecionada = File(pickedFile.path);
+    
+    }
+    
+
+   
 
     if (imagemSelecionada != null) {
       setState(() {
@@ -49,6 +96,8 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
     //ENVIAR AS IMAGENS PARA O STORAGE
     await _uploadImagens();
     print(" Lista ${_anuncio.fotos.toString()}");
+
+
     //SALVAR ANÚNCIO NO FIRESTORE
   }
 
@@ -142,7 +191,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                                             EdgeInsets.symmetric(horizontal: 8),
                                         child: GestureDetector(
                                           onTap: () {
-                                            _selecionaGaleria();
+                                            _mostrarEscolhaDialogo(context);
                                           },
                                           child: CircleAvatar(
                                             backgroundColor: Colors.grey[400],
@@ -357,7 +406,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                           _anuncio.descricao = descricao;
                         },
                         label: "Descrição",
-                        maxLines: null,
+                     //   maxLines: null,
                         hint: "Digite até 250 caracteres",
                         type: TextInputType.phone,
                         validator: (valor) {

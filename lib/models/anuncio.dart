@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Anuncio {
@@ -18,6 +17,21 @@ class Anuncio {
     this.id = anuncios.doc().id;
 
     this.fotos = [];
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {
+      "id": this.id,
+      "estado": this.estado,
+      "categoria": this.categoria,
+      "titulo": this.titulo,
+      "preco": this.preco,
+      "telefone": this.telefone,
+      "descricao": this.descricao,
+      "fotos": this.fotos,
+    };
+
+    return map;
   }
 
   List<String> get fotos => _fotos;

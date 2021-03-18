@@ -9,7 +9,7 @@ class TextFieldCustomizado extends StatelessWidget {
   final bool autofocus;
   final TextInputType type;
   final List<TextInputFormatter> inputFormatters;
-  //final int maxLines;
+  final int maxLines;
   final Function(String) validator;
   final Function(String) onSaved;
 
@@ -21,7 +21,7 @@ class TextFieldCustomizado extends StatelessWidget {
     this.autofocus = false,
     this.type = TextInputType.text,
     this.inputFormatters,
- //   this.maxLines,
+    this.maxLines = 1,
     this.validator,
     this.onSaved
   });
@@ -35,7 +35,7 @@ class TextFieldCustomizado extends StatelessWidget {
       keyboardType: this.type,
       inputFormatters: this.inputFormatters,
       validator: this.validator,
-      //maxLines: this.maxLines,
+      maxLines: this.maxLines,
       onSaved: onSaved,
       style: TextStyle(fontSize: 20),
       decoration: InputDecoration(
@@ -44,6 +44,7 @@ class TextFieldCustomizado extends StatelessWidget {
           labelText: this.label,
           filled: true,
           fillColor: Colors.white,
+          
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(6))),
     );
   }

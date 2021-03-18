@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projetoestrutura/models/itemAnuncio.dart';
 
 class MeusAnuncios extends StatefulWidget {
   @override
@@ -17,9 +18,17 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
           foregroundColor: Colors.white,
           child: Icon(Icons.add),
           onPressed: () {
-             Navigator.pushNamed(context, "/novo-anuncio");
-          } ,
+            Navigator.pushNamed(context, "/novo-anuncio");
+          },
         ),
-        body: Container());
+        body: SingleChildScrollView(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: 4,
+            itemBuilder: (_, index) {
+              return ItemAnuncio();
+            },
+          ),
+        ));
   }
 }

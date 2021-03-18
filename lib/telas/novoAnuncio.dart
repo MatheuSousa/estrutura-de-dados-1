@@ -1,5 +1,7 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:brasil_fields/modelos/estados.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,15 +25,14 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
 
   final _formKey = GlobalKey<FormState>();
   Anuncio _anuncio;
-
+  BuildContext _dialogContext;
   String _itemSelecionadoEstado;
   String _itemSelecionadoCategoria;
 
   //final picker = ImagePicker();
   File imagemSelecionada;
 
-  
-Future<void> _mostrarEscolhaDialogo(BuildContext context) {
+  Future<void> _mostrarEscolhaDialogo(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -44,14 +45,12 @@ Future<void> _mostrarEscolhaDialogo(BuildContext context) {
                       onTap: () {
                         _recuperarImagem(false);
                       }),
-
                   SizedBox(height: 16),
-
-                   GestureDetector(
+                  GestureDetector(
                       child: Text("Câmera"),
                       onTap: () {
                         _recuperarImagem(true);
-                      }),    
+                      }),
                 ],
               ),
             ),
@@ -59,31 +58,22 @@ Future<void> _mostrarEscolhaDialogo(BuildContext context) {
         });
   }
 
-
   _recuperarImagem(bool daCamera) async {
-
-
-    if(daCamera == false){
+    if (daCamera == false) {
       final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
-         if (pickedFile == null) return;
+          await ImagePicker().getImage(source: ImageSource.gallery);
+      if (pickedFile == null) return;
 
       imagemSelecionada = File(pickedFile.path);
     }
 
-
-   
-     if(daCamera){
+    if (daCamera) {
       final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.camera);
-         if (pickedFile == null) return;
+          await ImagePicker().getImage(source: ImageSource.camera);
+      if (pickedFile == null) return;
 
       imagemSelecionada = File(pickedFile.path);
-    
     }
-    
-
-   
 
     if (imagemSelecionada != null) {
       setState(() {
@@ -93,12 +83,46 @@ Future<void> _mostrarEscolhaDialogo(BuildContext context) {
   }
 
   salvarAnuncio() async {
+    _dialog(_dialogContext);
     //ENVIAR AS IMAGENS PARA O STORAGE
     await _uploadImagens();
     print(" Lista ${_anuncio.fotos.toString()}");
 
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User usuarioLogado = auth.currentUser;
+
+    String idUsuarioLogado = usuarioLogado.uid;
 
     //SALVAR ANÚNCIO NO FIRESTORE
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db
+        .collection("meus_anuncios")
+        .doc(idUsuarioLogado)
+        .collection("anuncios")
+        .doc(_anuncio.id)
+        .set(_anuncio.toMap())
+        .then((_) {
+      Navigator.pop(_dialogContext);
+      Navigator.pop(context);
+    });
+  }
+
+  _dialog(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 20),
+                Text("Salvando anúncio...")
+              ],
+            ),
+          );
+        });
   }
 
   Future _uploadImagens() async {
@@ -406,7 +430,7 @@ Future<void> _mostrarEscolhaDialogo(BuildContext context) {
                           _anuncio.descricao = descricao;
                         },
                         label: "Descrição",
-                     //   maxLines: null,
+                        maxLines: 5,
                         hint: "Digite até 250 caracteres",
                         type: TextInputType.phone,
                         validator: (valor) {
@@ -424,6 +448,8 @@ Future<void> _mostrarEscolhaDialogo(BuildContext context) {
                         if (_formKey.currentState.validate()) {
                           //SALVAR CAMPOS
                           _formKey.currentState.save();
+
+                          _dialogContext = context;
 
                           salvarAnuncio();
                         }

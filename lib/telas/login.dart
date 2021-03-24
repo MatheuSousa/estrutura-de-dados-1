@@ -29,6 +29,8 @@ class _LoginState extends State<Login> {
   }
 
   logarUser(Usuario usuario) {
+    //todo
+    //Adicionar nome no db
     FirebaseAuth auth = FirebaseAuth.instance;
     auth
         .signInWithEmailAndPassword(

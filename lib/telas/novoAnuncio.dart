@@ -90,7 +90,6 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
 
     FirebaseAuth auth = FirebaseAuth.instance;
     User usuarioLogado = auth.currentUser;
-
     String idUsuarioLogado = usuarioLogado.uid;
 
     //SALVAR ANÚNCIO NO FIRESTORE
@@ -150,7 +149,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
     _carregarItensDrop();
 
     _anuncio =
-        Anuncio(); //Quando carregar a tela já vai ter o anúncio instancifado
+        Anuncio.gerarId(); //Quando carregar a tela já vai ter o anúncio instancifado
   }
 
   _carregarItensDrop() {

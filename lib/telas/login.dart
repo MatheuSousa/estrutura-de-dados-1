@@ -11,6 +11,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController _controlladorSenha = TextEditingController();
   TextEditingController _controlladorEmail = TextEditingController();
+  TextEditingController _controlladorNome = TextEditingController();
   bool cadastrar = false;
   String msgErro = '';
   String textoRaised = "Entrar";
@@ -28,6 +29,8 @@ class _LoginState extends State<Login> {
   }
 
   logarUser(Usuario usuario) {
+    //todo
+    //Adicionar nome no db
     FirebaseAuth auth = FirebaseAuth.instance;
     auth
         .signInWithEmailAndPassword(
@@ -44,28 +47,36 @@ class _LoginState extends State<Login> {
   validadorCampos() {
     String email = _controlladorEmail.text;
     String senha = _controlladorSenha.text;
+    String nome = _controlladorNome.text;
 
     if (email.isNotEmpty && email.contains("@") && email.length > 10) {
       if (senha.isNotEmpty && senha.length > 5) {
-        Usuario usuario = Usuario();
-        usuario.email = email;
-        usuario.senha = senha;
+        if (nome.isNotEmpty) {
+          Usuario usuario = Usuario();
+          usuario.nome = nome;
+          usuario.email = email;
+          usuario.senha = senha;
 
-        if (cadastrar == true) {
-          cadastrarUser(usuario);
-          //cadastrar o usuário
+          if (cadastrar == true) {
+            cadastrarUser(usuario);
+            //cadastrar o usuário
+          } else {
+            //logar
+            logarUser(usuario);
+          }
         } else {
-          //logar
-          logarUser(usuario);
+          setState(() {
+            msgErro = "Informe seu nome";
+          });
         }
       } else {
         setState(() {
-          msgErro = "Digite uma senha com mais de 5 caracteres";
+          msgErro = "Informe uma senha com mais de 5 caracteres";
         });
       }
     } else {
       setState(() {
-        msgErro = "Digite um e-mail válido";
+        msgErro = "Informe um e-mail válido";
       });
     }
   }
@@ -93,10 +104,17 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 TextFieldCustomizado(
+                  controller: _controlladorNome,
+                  hint: "Nome",
+                  label: "Informe seu nome",
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                TextFieldCustomizado(
                   controller: _controlladorEmail,
                   hint: "E-mail",
-                  label: "Digite seu e- mail ",
-                  obscure: false,
+                  label: "Informe seu e-mail ",
                 ),
                 SizedBox(
                   height: 16,
@@ -105,7 +123,7 @@ class _LoginState extends State<Login> {
                   controller: _controlladorSenha,
                   hint: "Senha",
                   obscure: true,
-                  label: "Digite sua senha",
+                  label: "Informe sua senha",
                 ),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Text('Logar'),

@@ -126,7 +126,7 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
                                   FlatButton(
                                     color: Colors.red,
                                     child: Text(
-                                      "Remover",
+                                      "Remover ",
                                       style: TextStyle(
                                           color: Colors.white
                                       ),

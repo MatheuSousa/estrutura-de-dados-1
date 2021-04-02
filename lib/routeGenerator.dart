@@ -1,51 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:projetoestrutura/telas/anunciosOlx.dart';
+import 'package:projetoestrutura/telas/cadastro.dart';
 import 'package:projetoestrutura/telas/login.dart';
 import 'package:projetoestrutura/telas/meusAnuncios.dart';
 import 'package:projetoestrutura/telas/novoAnuncio.dart';
 
-class RouteGenerator{
-
-  static Route<dynamic> generateRoute(RouteSettings settings){
-
+class RouteGenerator {
+  static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
 
-    switch(settings.name){
+    switch (settings.name) {
       case "/":
-        return MaterialPageRoute(
-            builder: (_) => Anuncios() );
+        return MaterialPageRoute(builder: (_) => Anuncios());
       case "/login":
-        return MaterialPageRoute(
-            builder: (_) => Login() );
-    
+        return MaterialPageRoute(builder: (_) => Login());
+
+      case "/cadastro":
+        return MaterialPageRoute(builder: (_) => Cadastro());
+
       case "/meus-anuncios":
-        return MaterialPageRoute(
-            builder: (_) => MeusAnuncios());
+        return MaterialPageRoute(builder: (_) => MeusAnuncios());
 
       case "/novo-anuncio":
-        return MaterialPageRoute(
-            builder: (_) => NovoAnuncio()); 
-            
-                 
+        return MaterialPageRoute(builder: (_) => NovoAnuncio());
+
       default:
         erroTela();
     }
   }
 
-
-  static Route<dynamic> erroTela(){
-    return MaterialPageRoute(
-        builder: (_){
-          return Scaffold(
-            appBar: AppBar(
-              title: Text("Erro de rota"),
-              centerTitle: true,
-            ),
-
-            body: Center(
-              child: Text("Tela não encotnrada!"),
-            ),
-          );
-        });
+  static Route<dynamic> erroTela() {
+    return MaterialPageRoute(builder: (_) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Erro de rota"),
+          centerTitle: true,
+        ),
+        body: Center(
+          child: Text("Tela não encotnrada!"),
+        ),
+      );
+    });
   }
 }

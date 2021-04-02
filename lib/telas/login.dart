@@ -14,7 +14,7 @@ class _LoginState extends State<Login> {
   TextEditingController _controlladorNome = TextEditingController();
   bool cadastrar = false;
   String msgErro = '';
-  String textoRaised = "Entrar";
+  String textoRaised = "ENTRAR";
   String mensagemErro = '';
 
   cadastrarUser(Usuario usuario) {
@@ -75,6 +75,7 @@ class _LoginState extends State<Login> {
         });
       }
     } else {
+      print(email);
       setState(() {
         msgErro = "Informe um e-mail válido";
       });
@@ -133,8 +134,8 @@ class _LoginState extends State<Login> {
                         setState(() {
                           cadastrar = valor;
                           cadastrar == false
-                              ? textoRaised = "Entrar"
-                              : textoRaised = "Cadastrar";
+                              ? textoRaised = "ENTRAR"
+                              : textoRaised = "CADASTRAR";
                         });
                       }),
                   Text("Cadastrar"),
@@ -142,12 +143,25 @@ class _LoginState extends State<Login> {
                 RaisedButton(
                     child: Text(
                       textoRaised,
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+                      style: TextStyle(fontSize: 15, color: Colors.white),
                     ),
                     color: Color(0xff9c27b0),
                     padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                     onPressed: () {
                       validadorCampos();
+                    }),
+                SizedBox(
+                  height: 20,
+                ),
+                RaisedButton(
+                    child: Text(
+                      "CADASTRAR",
+                      style: TextStyle(fontSize: 15, color: Colors.white),
+                    ),
+                    color: Color(0xff9c27b0),
+                    padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/cadastro");
                     }),
                 SizedBox(
                   height: 20,

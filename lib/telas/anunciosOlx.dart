@@ -78,6 +78,26 @@ class _AnunciosState extends State<Anuncios> {
     });
   }
 
+  //filtrando os anúncios
+  Future<Stream<QuerySnapshot>> _filtrarAnuncios() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Query query = db.collection("anuncios");
+
+    if(itemSelecionadoEstado != null){
+        query = query.where("estado", isEqualTo: itemSelecionadoEstado);
+    }
+
+    if(itemSelecionadoCategoria != null){
+        query = query.where("categoria", isEqualTo: itemSelecionadoCategoria);
+    }
+
+    Stream<QuerySnapshot> stream = query.snapshots();
+
+    stream.listen((dados) {
+      _controler.add(dados);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,6 +131,7 @@ class _AnunciosState extends State<Anuncios> {
                       onChanged: (estados) {
                         setState(() {
                           itemSelecionadoEstado = estados;
+                          _filtrarAnuncios();
                         });
                       },
                     ),
@@ -134,6 +155,7 @@ class _AnunciosState extends State<Anuncios> {
                       onChanged: (categorias) {
                         setState(() {
                           itemSelecionadoCategoria = categorias;
+                          _filtrarAnuncios();
                         });
                       },
                     ),
@@ -148,7 +170,7 @@ class _AnunciosState extends State<Anuncios> {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
                   case ConnectionState.waiting:
-                   return Center(
+                    return Center(
                       child: Column(
                         children: [
                           Text("Carregando anúncios"),
@@ -159,7 +181,8 @@ class _AnunciosState extends State<Anuncios> {
                     break;
                   case ConnectionState.active:
                   case ConnectionState.done:
-                   if (snapshot.hasError) return Text("Erro ao carregar os dados!");
+                    if (snapshot.hasError)
+                      return Text("Erro ao carregar os dados!");
 
                     QuerySnapshot querySnapshot = snapshot.data;
 
@@ -180,11 +203,9 @@ class _AnunciosState extends State<Anuncios> {
                             Anuncio anuncio =
                                 Anuncio.fromDocumentSnapshot(documentSnapshot);
 
-                            return  ItemAnuncio(
+                            return ItemAnuncio(
                               anuncio: anuncio,
-                              onTapItem: (){
-
-                              },
+                              onTapItem: () {},
                             );
                           }),
                     );

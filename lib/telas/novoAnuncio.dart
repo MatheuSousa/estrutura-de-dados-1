@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:projetoestrutura/models/anuncio.dart';
 import 'package:projetoestrutura/models/raisedCustomizado.dart';
 import 'package:projetoestrutura/models/textFieldCostumizado.dart';
+import 'package:projetoestrutura/utils/configuracoes.dart';
 import 'dart:io';
 
 import 'package:validadores/Validador.dart';
@@ -101,8 +102,15 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
         .doc(_anuncio.id)
         .set(_anuncio.toMap())
         .then((_) {
-      Navigator.pop(_dialogContext);
-      Navigator.pop(context);
+      //salvar anúncio público
+      db
+          .collection("anuncios")
+          .doc(_anuncio.id)
+          .set(_anuncio.toMap())
+          .then((_) {
+        Navigator.pop(_dialogContext);
+        Navigator.pop(context);
+      });
     });
   }
 
@@ -148,31 +156,15 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
     super.initState();
     _carregarItensDrop();
 
-    _anuncio =
-        Anuncio.gerarId(); //Quando carregar a tela já vai ter o anúncio instancifado
+    _anuncio = Anuncio
+        .gerarId(); //Quando carregar a tela já vai ter o anúncio instancifado
   }
 
   _carregarItensDrop() {
-    _listaItensCategorias
-        .add(DropdownMenuItem(child: Text("Automóvel"), value: "auto"));
-
-    _listaItensCategorias
-        .add(DropdownMenuItem(child: Text("Imóvel"), value: "imovel"));
-    _listaItensCategorias
-        .add(DropdownMenuItem(child: Text("Carros"), value: "carros"));
-    _listaItensCategorias
-        .add(DropdownMenuItem(child: Text("Jardinagem"), value: "jardinagem"));
-
-    _listaItensCategorias.add(
-        DropdownMenuItem(child: Text("Ferramentas"), value: "ferramentas"));
+    _listaItensCategorias = Configuracoes.getCategorias();
 
     //ESTADOS
-    for (var estado in Estados.listaEstadosAbrv) {
-      _listaItensEstados.add(DropdownMenuItem(
-        child: Text(estado),
-        value: estado,
-      ));
-    }
+    _listaItensEstados = Configuracoes.getEstados();
   }
 
   @override

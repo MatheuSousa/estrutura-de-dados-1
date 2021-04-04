@@ -22,7 +22,6 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
   }
 
   Future<Stream<QuerySnapshot>> _adicionarListenerAnuncios() async {
-    
     await _recuperaDadosUsuarioLogado();
     FirebaseFirestore db = FirebaseFirestore.instance;
     Stream<QuerySnapshot> stream = db
@@ -36,122 +35,110 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
     });
   }
 
-  _removerAnuncio(String idAnuncio){
-
+  _removerAnuncio(String idAnuncio) {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    db.collection("meus_anuncios")
-      .doc(idUsuarioLogado)
-      .collection("anuncios")
-      .doc( idAnuncio )
-      .delete();
-
+    db
+        .collection("meus_anuncios")
+        .doc(idUsuarioLogado)
+        .collection("anuncios")
+        .doc(idAnuncio)
+        .delete()
+        .then((_) {
+      db.collection("anuncios").doc(idAnuncio).delete();
+    });
   }
-@override
+
+  @override
   void initState() {
     _adicionarListenerAnuncios();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Meus Anúncios"),
-          centerTitle: true,
-        ),
-        floatingActionButton: FloatingActionButton(
-          foregroundColor: Colors.white,
-          child: Icon(Icons.add),
-          onPressed: () {
-            Navigator.pushNamed(context, "/novo-anuncio");
-          },
-        ),
-        body: StreamBuilder(
-          stream: _controller.stream,
-          builder: (context, snapshot) {
+      appBar: AppBar(
+        title: Text("Meus Anúncios"),
+        centerTitle: true,
+      ),
+      floatingActionButton: FloatingActionButton(
+        foregroundColor: Colors.white,
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.pushNamed(context, "/novo-anuncio");
+        },
+      ),
+      body: StreamBuilder(
+        stream: _controller.stream,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return Center(
+                child: Column(
+                  children: [
+                    Text("Carregando anúncios"),
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              );
+              break;
+            case ConnectionState.active:
+            case ConnectionState.done:
+              if (snapshot.hasError) return Text("Erro ao carregar os dados!");
 
-        switch(snapshot.connectionState){
-
-          case ConnectionState.none:
-          case ConnectionState.waiting:
-            return Center(
-              child: Column(
-                children: [
-                  
-                  Text("Carregando anúncios"),
-                  CircularProgressIndicator(),
-                ],
-              ),
-            );
-             break;
-          case ConnectionState.active:
-          case ConnectionState.done:
-
-              if(snapshot.hasError)
-                return Text("Erro ao carregar os dados!");
-              
               QuerySnapshot querySnapshot = snapshot.data;
 
               return ListView.builder(
                   itemCount: querySnapshot.docs.length,
-                  itemBuilder: (_, indice){
-                    
-                    List<DocumentSnapshot> anuncios = querySnapshot.docs.toList();
+                  itemBuilder: (_, indice) {
+                    List<DocumentSnapshot> anuncios =
+                        querySnapshot.docs.toList();
                     DocumentSnapshot documentSnapshot = anuncios[indice];
-                    Anuncio anuncio = Anuncio.fromDocumentSnapshot(documentSnapshot);
-                    
+                    Anuncio anuncio =
+                        Anuncio.fromDocumentSnapshot(documentSnapshot);
+
                     return ItemAnuncio(
-                    anuncio: anuncio,
-                      onPressedRemover: (){
+                      anuncio: anuncio,
+                      onPressedRemover: () {
                         showDialog(
                             context: context,
-                          builder: (context){
+                            builder: (context) {
                               return AlertDialog(
                                 title: Text("Confirmar"),
-                                content: Text("Deseja realmente excluir o anúncio?"),
+                                content:
+                                    Text("Deseja realmente excluir o anúncio?"),
                                 actions: <Widget>[
-
                                   FlatButton(
                                     color: Colors.blue,
                                     child: Text(
-                                        "Cancelar",
-                                      style: TextStyle(
-                                          color: Colors.white
-                                      ),
+                                      "Cancelar",
+                                      style: TextStyle(color: Colors.white),
                                     ),
-                                    onPressed: (){
+                                    onPressed: () {
                                       Navigator.of(context).pop();
                                     },
                                   ),
-
                                   FlatButton(
                                     color: Colors.red,
                                     child: Text(
                                       "Remover",
-                                      style: TextStyle(
-                                          color: Colors.white
-                                      ),
+                                      style: TextStyle(color: Colors.white),
                                     ),
-                                  
-                                    onPressed: (){
-                                      _removerAnuncio( anuncio.id );
+                                    onPressed: () {
+                                      _removerAnuncio(anuncio.id);
                                       Navigator.of(context).pop();
                                     },
                                   ),
-
-
                                 ],
                               );
-                          }
-                        );
+                            });
                       },
                     );
-                  }
-              );
-              
+                  });
           }
-          
+
           return Container();
-          
         },
       ),
     );

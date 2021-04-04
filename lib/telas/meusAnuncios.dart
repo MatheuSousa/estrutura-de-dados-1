@@ -93,8 +93,7 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
               return ListView.builder(
                   itemCount: querySnapshot.docs.length,
                   itemBuilder: (_, indice) {
-                    List<DocumentSnapshot> anuncios =
-                        querySnapshot.docs.toList();
+                    List<DocumentSnapshot> anuncios = querySnapshot.docs.toList();
                     DocumentSnapshot documentSnapshot = anuncios[indice];
                     Anuncio anuncio =
                         Anuncio.fromDocumentSnapshot(documentSnapshot);

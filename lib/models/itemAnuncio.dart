@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projetoestrutura/models/anuncio.dart';
 
+// ignore: must_be_immutable
 class ItemAnuncio extends StatelessWidget {
 
   Anuncio anuncio;

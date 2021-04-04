@@ -6,7 +6,9 @@ import 'package:projetoestrutura/telas/meusAnuncios.dart';
 import 'package:projetoestrutura/telas/novoAnuncio.dart';
 
 class RouteGenerator {
+  // ignore: missing_return
   static Route<dynamic> generateRoute(RouteSettings settings) {
+    // ignore: unused_local_variable
     final args = settings.arguments;
 
     switch (settings.name) {

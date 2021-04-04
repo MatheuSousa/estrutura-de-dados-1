@@ -1,5 +1,4 @@
 import 'package:brasil_fields/brasil_fields.dart';
-import 'package:brasil_fields/modelos/estados.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -157,7 +156,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
     _carregarItensDrop();
 
     _anuncio = Anuncio
-        .gerarId(); //Quando carregar a tela já vai ter o anúncio instancifado
+        .gerarId(); //Quando carregar a tela já vai ter o anúncio instanciado
   }
 
   _carregarItensDrop() {

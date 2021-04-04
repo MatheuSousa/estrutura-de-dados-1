@@ -21,6 +21,7 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
     idUsuarioLogado = usuarioLogado.uid;
   }
 
+  // ignore: missing_return
   Future<Stream<QuerySnapshot>> _adicionarListenerAnuncios() async {
     await _recuperaDadosUsuarioLogado();
     FirebaseFirestore db = FirebaseFirestore.instance;

@@ -44,7 +44,6 @@ class TextFieldCustomizado extends StatelessWidget {
           labelText: this.label,
           filled: true,
           fillColor: Colors.white,
-          
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(6))),
     );
   }

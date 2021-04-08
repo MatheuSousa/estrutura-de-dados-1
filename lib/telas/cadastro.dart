@@ -158,6 +158,10 @@ class _CadastroState extends State<Cadastro> {
           primary: Color(0xff9c27b0),
           padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
         ),
-        onPressed: () {});
+        onPressed: () {
+          if (!_formKey.currentState.validate()) {
+            return;
+          }
+        });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projetoestrutura/telas/anunciosOlx.dart';
 import 'package:projetoestrutura/telas/cadastro.dart';
+import 'package:projetoestrutura/telas/detalhesAnuncio.dart';
 import 'package:projetoestrutura/telas/login.dart';
 import 'package:projetoestrutura/telas/meusAnuncios.dart';
 import 'package:projetoestrutura/telas/novoAnuncio.dart';
@@ -25,6 +26,9 @@ class RouteGenerator {
 
       case "/novo-anuncio":
         return MaterialPageRoute(builder: (_) => NovoAnuncio());
+
+      case "/detalhes-anuncio":
+        return MaterialPageRoute(builder: (_) => DetalhesAnuncio(args));
 
       default:
         erroTela();

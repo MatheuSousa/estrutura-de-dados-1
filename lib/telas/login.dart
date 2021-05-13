@@ -153,16 +153,16 @@ class _LoginState extends State<Login> {
                 SizedBox(
                   height: 20,
                 ),
-                RaisedButton(
-                    child: Text(
-                      "CADASTRAR",
-                      style: TextStyle(fontSize: 15, color: Colors.white),
-                    ),
-                    color: Color(0xff9c27b0),
-                    padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    onPressed: () {
-                      Navigator.pushNamed(context, "/cadastro");
-                    }),
+                // RaisedButton(
+                //     child: Text(
+                //       "CADASTRAR",
+                //       style: TextStyle(fontSize: 15, color: Colors.white),
+                //     ),
+                //     color: Color(0xff9c27b0),
+                //     padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                //     onPressed: () {
+                //       Navigator.pushNamed(context, "/cadastro");
+                //     }),
                 SizedBox(
                   height: 20,
                 ),

@@ -24,7 +24,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
   List<DropdownMenuItem<String>> _listaItensCategorias = List();
 
   final _formKey = GlobalKey<FormState>();
-  Anuncio _anuncio;
+  Anuncio  _anuncio;
   BuildContext _dialogContext;
   String _itemSelecionadoEstado;
   String _itemSelecionadoCategoria;
@@ -75,11 +75,11 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
       imagemSelecionada = File(pickedFile.path);
     }
 
-    if (imagemSelecionada != null) {
-      setState(() {
-        _listaImagens.add(imagemSelecionada);
-      });
-    }
+        if (imagemSelecionada != null) {
+          setState(() {
+            _listaImagens.add(imagemSelecionada);
+          });
+        }
   }
 
   salvarAnuncio() async {
@@ -135,12 +135,10 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference pastaRaiz = storage.ref();
 
-    String nomeIMG = DateTime.now().millisecondsSinceEpoch.toString();
-
-    //o for para fazer o upload de cada uma separada
     for (var imagem in _listaImagens) {
+      String nomeImagem = DateTime.now().millisecondsSinceEpoch.toString();
       Reference arquivo =
-          pastaRaiz.child("meus_anuncios").child(_anuncio.id).child(nomeIMG);
+          pastaRaiz.child("meus_anuncios").child(_anuncio.id).child(nomeImagem);
 
       UploadTask uploadTask = arquivo.putFile(imagem);
       TaskSnapshot taskSnapshot = await uploadTask;
@@ -422,7 +420,7 @@ class _NovoAnuncioState extends State<NovoAnuncio> {
                         label: "Descrição",
                         maxLines: 5,
                         hint: "Digite até 250 caracteres",
-                        type: TextInputType.phone,
+                        //type: TextInputType.phone,
                         validator: (valor) {
                           return Validador()
                               .add(Validar.OBRIGATORIO,

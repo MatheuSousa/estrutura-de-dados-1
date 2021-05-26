@@ -28,7 +28,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => NovoAnuncio());
 
       case "/detalhes-anuncio":
-        return MaterialPageRoute(builder: (_) => DetalhesAnuncio(args));  
+        return MaterialPageRoute(builder: (_) => DetalhesAnuncio(args));
 
       default:
         erroTela();
